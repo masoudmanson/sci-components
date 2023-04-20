@@ -19,9 +19,14 @@ describe("<Banner />", () => {
 
   it("renders text given to it", () => {
     const text = "this is a test component";
+
     render(<Test {...Test.args} textChild={text} />);
+
     const bannerText = screen.getByText(text);
+
     expect(bannerText).not.toBeNull();
+
+    expect(bannerText.textContent).toMatch(text);
   });
 
   it("can be dismissed", async () => {
