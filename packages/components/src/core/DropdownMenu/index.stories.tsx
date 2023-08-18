@@ -54,32 +54,30 @@ const DropdownMenu = <Multiple extends boolean | undefined = false>(
 
   return (
     <div style={{ margin: "16px 0 0 24px" }} ref={anchorRef}>
-      {anchorEl ? (
-        <RawDropdownMenu
-          anchorEl={anchorEl}
-          disableCloseOnSelect={false}
-          multiple={multiple}
-          onChange={handleChange}
-          onClickAway={handleClickAway}
-          open
-          options={options}
-          PopperBaseProps={{
-            disablePortal: false,
-            placement: POPPER_POSITION,
-            sx: { width: 300 },
-          }}
-          search={search}
-          title={title}
-          value={multiple ? pendingValue : value}
-          getOptionDisabled={(option: DefaultDropdownMenuOption) => {
-            return (
-              option.name === "Type: feature request" ||
-              option.name === "Type: documentation"
-            );
-          }}
-          {...props}
-        />
-      ) : null}
+      <RawDropdownMenu
+        anchorEl={anchorEl}
+        disableCloseOnSelect={false}
+        multiple={multiple}
+        onChange={handleChange}
+        onClickAway={handleClickAway}
+        open
+        options={options}
+        PopperBaseProps={{
+          disablePortal: false,
+          placement: POPPER_POSITION,
+          sx: { width: 300 },
+        }}
+        search={search}
+        title={title}
+        value={multiple ? pendingValue : value}
+        getOptionDisabled={(option: DefaultDropdownMenuOption) => {
+          return (
+            option.name === "Type: feature request" ||
+            option.name === "Type: documentation"
+          );
+        }}
+        {...props}
+      />
     </div>
   );
 
@@ -274,24 +272,22 @@ const LivePreviewDemo = (): JSX.Element => {
           sdsStyle="minimal"
         />
 
-        {anchorEl1 ? (
-          <RawDropdownMenu
-            anchorEl={anchorEl1}
-            open={!!open1}
-            onChange={handleChange1}
-            disableCloseOnSelect={false}
-            options={options.slice(0, 3) as DefaultDropdownMenuOption[]}
-            PopperBaseProps={{
-              placement: POPPER_POSITION,
-              sx: { width: POPPER_WIDTH },
-            }}
-            search={false}
-            multiple={false}
-            hasSections={false}
-            value={value1}
-            onClickAway={handleClickAway1}
-          />
-        ) : null}
+        <RawDropdownMenu
+          anchorEl={anchorEl1}
+          open={!!open1}
+          onChange={handleChange1}
+          disableCloseOnSelect={false}
+          options={options.slice(0, 3) as DefaultDropdownMenuOption[]}
+          PopperBaseProps={{
+            placement: POPPER_POSITION,
+            sx: { width: POPPER_WIDTH },
+          }}
+          search={false}
+          multiple={false}
+          hasSections={false}
+          value={value1}
+          onClickAway={handleClickAway1}
+        />
       </div>
 
       <div style={{ gridArea: "1/2/2/3" }}>
@@ -305,24 +301,22 @@ const LivePreviewDemo = (): JSX.Element => {
           sdsIcon="infoSpeechBubble"
         />
 
-        {anchorEl2 ? (
-          <RawDropdownMenu
-            anchorEl={anchorEl2}
-            open={!!open2}
-            search={false}
-            multiple={false}
-            onChange={handleChange2}
-            disableCloseOnSelect={false}
-            options={options.slice(0, 3) as DefaultDropdownMenuOption[]}
-            PopperBaseProps={{
-              placement: POPPER_POSITION,
-              sx: { width: POPPER_WIDTH },
-            }}
-            value={value2}
-            title="Title Lorem Ipsum"
-            onClickAway={handleClickAway2}
-          />
-        ) : null}
+        <RawDropdownMenu
+          anchorEl={anchorEl2}
+          open={!!open2}
+          search={false}
+          multiple={false}
+          onChange={handleChange2}
+          disableCloseOnSelect={false}
+          options={options.slice(0, 3) as DefaultDropdownMenuOption[]}
+          PopperBaseProps={{
+            placement: POPPER_POSITION,
+            sx: { width: POPPER_WIDTH },
+          }}
+          value={value2}
+          title="Title Lorem Ipsum"
+          onClickAway={handleClickAway2}
+        />
       </div>
 
       <div style={{ gridArea: "1/3/2/4" }}>
@@ -336,23 +330,21 @@ const LivePreviewDemo = (): JSX.Element => {
           sdsStyle="rounded"
         />
 
-        {anchorEl3 ? (
-          <RawDropdownMenu
-            anchorEl={anchorEl3}
-            open={!!open3}
-            search
-            multiple
-            onChange={handleChange3}
-            disableCloseOnSelect
-            options={options as DefaultDropdownMenuOption[]}
-            PopperBaseProps={{
-              placement: POPPER_POSITION,
-              sx: { width: POPPER_WIDTH },
-            }}
-            value={pendingValue3}
-            onClickAway={handleClickAway3}
-          />
-        ) : null}
+        <RawDropdownMenu
+          anchorEl={anchorEl3}
+          open={!!open3}
+          search
+          multiple
+          onChange={handleChange3}
+          disableCloseOnSelect
+          options={options as DefaultDropdownMenuOption[]}
+          PopperBaseProps={{
+            placement: POPPER_POSITION,
+            sx: { width: POPPER_WIDTH },
+          }}
+          value={pendingValue3}
+          onClickAway={handleClickAway3}
+        />
       </div>
 
       <div style={{ gridArea: "1/4/2/5" }}>
@@ -366,25 +358,23 @@ const LivePreviewDemo = (): JSX.Element => {
           sdsStyle="square"
         />
 
-        {anchorEl4 ? (
-          <RawDropdownMenu
-            anchorEl={anchorEl4}
-            open={!!open4}
-            search={false}
-            multiple
-            hasSections
-            groupBy={(option) => option.section as string}
-            onChange={handleChange4}
-            disableCloseOnSelect
-            options={options as DefaultDropdownMenuOption[]}
-            PopperBaseProps={{
-              placement: POPPER_POSITION,
-              sx: { width: POPPER_WIDTH },
-            }}
-            value={pendingValue4}
-            onClickAway={handleClickAway4}
-          />
-        ) : null}
+        <RawDropdownMenu
+          anchorEl={anchorEl4}
+          open={!!open4}
+          search={false}
+          multiple
+          hasSections
+          groupBy={(option) => option.section as string}
+          onChange={handleChange4}
+          disableCloseOnSelect
+          options={options as DefaultDropdownMenuOption[]}
+          PopperBaseProps={{
+            placement: POPPER_POSITION,
+            sx: { width: POPPER_WIDTH },
+          }}
+          value={pendingValue4}
+          onClickAway={handleClickAway4}
+        />
       </div>
     </div>
   );
@@ -708,23 +698,21 @@ const TestDemo = (props: Args): JSX.Element => {
 
   return (
     <div style={{ margin: "16px 0 0 24px" }} ref={anchorRef}>
-      {anchorEl ? (
-        <RawDropdownMenu
-          anchorEl={anchorEl}
-          open
-          search={search}
-          multiple={multiple}
-          value={multiple ? pendingValue : value}
-          onChange={handleChange}
-          disableCloseOnSelect={multiple}
-          options={options}
-          onClickAway={handleClickAway}
-          groupBy={(option: DefaultDropdownMenuOption) =>
-            option.section as string
-          }
-          {...props}
-        />
-      ) : null}
+      <RawDropdownMenu
+        anchorEl={anchorEl}
+        open
+        search={search}
+        multiple={multiple}
+        value={multiple ? pendingValue : value}
+        onChange={handleChange}
+        disableCloseOnSelect={multiple}
+        options={options}
+        onClickAway={handleClickAway}
+        groupBy={(option: DefaultDropdownMenuOption) =>
+          option.section as string
+        }
+        {...props}
+      />
     </div>
   );
 
