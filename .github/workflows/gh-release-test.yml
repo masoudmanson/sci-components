@@ -23,10 +23,11 @@ jobs:
         run: |
           CURRENT_VERSIONS="["
           for package_json in $(find ./packages -name package.json); do
-            version=$(jq -r .version $package_json)
+            version=$(jq -r .version "$package_json")
             CURRENT_VERSIONS="${CURRENT_VERSIONS}{\"version\":\"${version}\"},"
           done
-          CURRENT_VERSIONS="${CURRENT_VERSIONS%,}]" # Remove trailing comma
+          CURRENT_VERSIONS="${CURRENT_VERSIONS%,}" # Remove trailing comma
+          CURRENT_VERSIONS="${CURRENT_VERSIONS}]" # Close the JSON array
           echo "CURRENT_VERSIONS=${CURRENT_VERSIONS}" >> $GITHUB_ENV
 
   create_github_release:
