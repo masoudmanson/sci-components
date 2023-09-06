@@ -27,12 +27,15 @@ jobs:
           matrix="${matrix%,}" # Remove trailing comma
           matrix="${matrix}]" # Close the JSON array
           echo "matrix=${matrix}" >> $GITHUB_OUTPUT
-  builder:
+
+  create-github-release:
     needs: create-version-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
         cfg: ${{fromJson(needs.create-version-matrix.outputs.matrix)}}
     steps:
-      - run: |
-          echo version: ${{ matrix.cfg.version }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ matrix.cfg.version }}
