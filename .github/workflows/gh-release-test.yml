@@ -50,17 +50,14 @@ jobs:
             echo $version
           done
 
-      # - name: Create Release
-      #   id: create_release
-      #   if: steps.tag_check.outputs.exists_tag == 'true'
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: v${{ env.CURRENT_VERSIONS }}
-      #     # Copy Pull Request's title and body to Release Note
-      #     release_name: ${{ github.event.pull_request.title }}
-      #     body: |
-      #       ${{ github.event.pull_request.body }}
-      #     draft: false
-      #     prerelease: false
+      - name: Run Version Check and Tag for Each Version
+        run: |
+          for version in $(echo $CURRENT_VERSIONS | tr ',' ' '); do
+            echo "Creating job for version $version..."
+            echo "::set-output name=version::$version"
+          done
+
+      - name: Create Release
+        if: steps.set_versions.outcome == 'success'
+        run: |
+          echo "Running release job for individual tag ${{ steps.set_versions.outputs.version }}"
