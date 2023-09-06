@@ -48,8 +48,15 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          echo "::set-output name=matrix::[{\"go\":\"1.13\",\"commit\":\"v1.0.0\"},{\"go\":\"1.14\",\"commit\":\"v1.2.0\"}]"
-
+          matrix="["
+          for package_json in $(find ./packages -name package.json); do
+            version=$(jq -r .version "$package_json")
+            matrix="${matrix}{\"version\":\"${version}\"},"
+          done
+          matrix="${matrix%,}" # Remove trailing comma
+          matrix="${matrix}]" # Close the JSON array
+          echo "::set-output name=matrix::${matrix}"
+          echo "matrix=${matrix}" >> $GITHUB_ENV
   builder:
     needs: job1
     runs-on: ubuntu-latest
@@ -58,4 +65,4 @@ jobs:
         cfg: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
       - run: |
-          echo bin-${{ matrix.cfg.go }}-${{ matrix.cfg.commit }}
+          echo bin-${{ matrix.cfg.version }}
