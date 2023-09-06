@@ -48,7 +48,7 @@ jobs:
     steps:
       # Step 1: Check out the repository code
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -61,7 +61,7 @@ jobs:
           done
           matrix="${matrix%,}" # Remove trailing comma
           matrix="${matrix}]" # Close the JSON array
-          echo "::set-output name=matrix::${matrix}"
+          echo "matrix=${matrix}" >> $GITHUB_OUTPUT
   builder:
     needs: job1
     runs-on: ubuntu-latest
