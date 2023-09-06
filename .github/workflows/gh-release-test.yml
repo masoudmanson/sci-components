@@ -6,38 +6,56 @@ on:
       - "*"
 
 jobs:
-  create_version_matrix:
+  # create_version_matrix:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  #   steps:
+  #     # Step 1: Check out the repository code
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Create Version Matrix
+  #       id: set-matrix
+  #       run: |
+  #         CURRENT_VERSIONS="["
+  #         for package_json in $(find ./packages -name package.json); do
+  #           version=$(jq -r .version "$package_json")
+  #           CURRENT_VERSIONS="${CURRENT_VERSIONS}{\"version\":\"${version}\"},"
+  #         done
+  #         CURRENT_VERSIONS="${CURRENT_VERSIONS%,}" # Remove trailing comma
+  #         CURRENT_VERSIONS="${CURRENT_VERSIONS}]" # Close the JSON array
+  #         echo "CURRENT_VERSIONS=${CURRENT_VERSIONS}" >> $GITHUB_ENV
+
+  # create_github_release:
+  #   needs: create_version_matrix
+  #   runs-on: ubuntu-latest
+  #   env: # Set the environment variable for the matrix
+  #     MATRIX: ${{ steps.set-matrix.outputs.matrix }}
+  #   strategy:
+  #     matrix:
+  #       cfg: ${{fromJson(env.MATRIX)}}
+  #   steps:
+  #     - run: |
+  #         echo "Run GH release for ${{ matrix.cfg.version }}"
+  job1:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
-
     steps:
-      # Step 1: Check out the repository code
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Create Version Matrix
-        id: set-matrix
+      - id: set-matrix
         run: |
-          CURRENT_VERSIONS="["
-          for package_json in $(find ./packages -name package.json); do
-            version=$(jq -r .version "$package_json")
-            CURRENT_VERSIONS="${CURRENT_VERSIONS}{\"version\":\"${version}\"},"
-          done
-          CURRENT_VERSIONS="${CURRENT_VERSIONS%,}" # Remove trailing comma
-          CURRENT_VERSIONS="${CURRENT_VERSIONS}]" # Close the JSON array
-          echo "CURRENT_VERSIONS=${CURRENT_VERSIONS}" >> $GITHUB_ENV
+          echo "::set-output name=matrix::[{\"go\":\"1.13\",\"commit\":\"v1.0.0\"},{\"go\":\"1.14\",\"commit\":\"v1.2.0\"}]"
 
-  create_github_release:
-    needs: create_version_matrix
+  builder:
+    needs: job1
     runs-on: ubuntu-latest
-    env: # Set the environment variable for the matrix
-      MATRIX: ${{ steps.set-matrix.outputs.matrix }}
     strategy:
       matrix:
-        cfg: ${{fromJson(env.MATRIX)}}
+        cfg: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
       - run: |
-          echo "Run GH release for ${{ matrix.cfg.version }}"
+          echo bin-${{ matrix.cfg.go }}-${{ matrix.cfg.commit }}
