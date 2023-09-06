@@ -6,34 +6,35 @@ on:
       - "*"
 
 jobs:
-  version_check_and_tag:
+  create_version_matrix:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
     steps:
       # Step 1: Check out the repository code
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Set Current Versions
-        id: set_versions
+      - name: Create Version Matrix
+        id: set-matrix
         run: |
-          CURRENT_VERSIONS=""
+          CURRENT_VERSIONS="["
           for package_json in $(find ./packages -name package.json); do
             version=$(jq -r .version $package_json)
-            CURRENT_VERSIONS="${CURRENT_VERSIONS}${version},"
+            CURRENT_VERSIONS="${CURRENT_VERSIONS}{\"version\":\"${version}\"},"
           done
-          CURRENT_VERSIONS=${CURRENT_VERSIONS%,} # Remove trailing comma
+          CURRENT_VERSIONS="${CURRENT_VERSIONS%,}]" # Remove trailing comma
           echo "CURRENT_VERSIONS=${CURRENT_VERSIONS}" >> $GITHUB_ENV
 
-      - name: Run Version Check and Tag for Each Version
-        run: |
-          for version in $(echo $CURRENT_VERSIONS | tr ',' ' '); do
-            echo "Creating job for version $version..."
-            echo "VERSION=${version}" >> $GITHUB_ENV
-          done
-
-      - name: Create Release
-        run: |
-          echo "Running release job for individual tag ${{ steps.set_versions.outputs.version }}"
+  create_github_release:
+    needs: create_version_matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cfg: ${{fromJson(needs.create_version_matrix.outputs.CURRENT_VERSIONS)}}
+    steps:
+      - run: |
+          echo "Run GH release for ${{ matrix.cfg.version }}"
