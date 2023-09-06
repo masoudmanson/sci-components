@@ -22,7 +22,8 @@ jobs:
           matrix="["
           for package_json in $(find ./packages -name package.json); do
             version=$(jq -r .version "$package_json")
-            matrix="${matrix}{\"version\":\"${version}\"},"
+            name=$(jq -r .name "$package_json")
+            matrix="${matrix}{\"name\":\"${name}\", \"version\":\"${version}\"},"
           done
           matrix="${matrix%,}" # Remove trailing comma
           matrix="${matrix}]" # Close the JSON array
@@ -38,4 +39,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ matrix.cfg.version }}
+          tag_name: "${{ matrix.cfg.name }}@${{ matrix.cfg.version }}"
