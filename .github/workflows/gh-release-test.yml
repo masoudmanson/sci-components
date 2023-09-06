@@ -61,7 +61,7 @@ jobs:
           done
           matrix="${matrix%,}" # Remove trailing comma
           matrix="${matrix}]" # Close the JSON array
-          echo "::set-output name=matrix::${matrix}"
+          echo "matrix=${matrix}" >> $GITHUB_ENV
   builder:
     needs: job1
     runs-on: ubuntu-latest
