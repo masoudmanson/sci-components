@@ -1,4 +1,4 @@
-name: Version Check and Tag
+name: Create Github Releases
 
 on:
   push:
@@ -6,42 +6,7 @@ on:
       - "*"
 
 jobs:
-  # create_version_matrix:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     matrix: ${{ steps.set-matrix.outputs.matrix }}
-
-  #   steps:
-  #     # Step 1: Check out the repository code
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Create Version Matrix
-  #       id: set-matrix
-  #       run: |
-  #         CURRENT_VERSIONS="["
-  #         for package_json in $(find ./packages -name package.json); do
-  #           version=$(jq -r .version "$package_json")
-  #           CURRENT_VERSIONS="${CURRENT_VERSIONS}{\"version\":\"${version}\"},"
-  #         done
-  #         CURRENT_VERSIONS="${CURRENT_VERSIONS%,}" # Remove trailing comma
-  #         CURRENT_VERSIONS="${CURRENT_VERSIONS}]" # Close the JSON array
-  #         echo "CURRENT_VERSIONS=${CURRENT_VERSIONS}" >> $GITHUB_ENV
-
-  # create_github_release:
-  #   needs: create_version_matrix
-  #   runs-on: ubuntu-latest
-  #   env: # Set the environment variable for the matrix
-  #     MATRIX: ${{ steps.set-matrix.outputs.matrix }}
-  #   strategy:
-  #     matrix:
-  #       cfg: ${{fromJson(env.MATRIX)}}
-  #   steps:
-  #     - run: |
-  #         echo "Run GH release for ${{ matrix.cfg.version }}"
-  job1:
+  create-version-matrix:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -63,11 +28,11 @@ jobs:
           matrix="${matrix}]" # Close the JSON array
           echo "matrix=${matrix}" >> $GITHUB_OUTPUT
   builder:
-    needs: job1
+    needs: create-version-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        cfg: ${{fromJson(needs.job1.outputs.matrix)}}
+        cfg: ${{fromJson(needs.create-version-matrix.outputs.matrix)}}
     steps:
       - run: |
-          echo bin-${{ matrix.cfg.version }}
+          echo version: ${{ matrix.cfg.version }}
