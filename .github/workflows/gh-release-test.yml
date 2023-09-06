@@ -31,10 +31,9 @@ jobs:
         run: |
           for version in $(echo $CURRENT_VERSIONS | tr ',' ' '); do
             echo "Creating job for version $version..."
-            echo "::set-output name=version::$version"
+            echo "VERSION=${version}" >> $GITHUB_ENV
           done
 
       - name: Create Release
-        if: steps.set_versions.outcome == 'success'
         run: |
           echo "Running release job for individual tag ${{ steps.set_versions.outputs.version }}"
