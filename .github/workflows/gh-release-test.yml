@@ -14,7 +14,7 @@ jobs:
     steps:
       # Step 1: Check out the repository code
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
@@ -33,9 +33,11 @@ jobs:
   create_github_release:
     needs: create_version_matrix
     runs-on: ubuntu-latest
+    env: # Set the environment variable for the matrix
+      MATRIX: ${{ steps.set-matrix.outputs.matrix }}
     strategy:
       matrix:
-        cfg: ${{fromJson(needs.create_version_matrix.outputs.CURRENT_VERSIONS)}}
+        cfg: ${{fromJson(env.MATRIX)}}
     steps:
       - run: |
           echo "Run GH release for ${{ matrix.cfg.version }}"
